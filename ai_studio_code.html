@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Tera Steve</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@1,300;1,500&family=Quicksand:wght@300&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #fdf2f4;
+            --accent: #d63384;
+            --text: #5d4037;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; 
+            background: radial-gradient(circle at center, #ffffff 0%, #fce4ec 100%);
+            font-family: 'Quicksand', sans-serif;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        /* Vignette effect for a cinematic look */
+        body::after {
+            content: "";
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 50%, rgba(214, 51, 132, 0.05) 100%);
+            pointer-events: none; z-index: 20;
+        }
+
+        header {
+            margin-top: 5vh;
+            text-align: center;
+            color: var(--text);
+            z-index: 30;
+        }
+
+        .song-title {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.5rem;
+            color: var(--accent);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .counter-text {
+            letter-spacing: 4px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            opacity: 0.6;
+        }
+
+        /* Polaroid Frame Improvement */
+        #photo-frame {
+            position: relative;
+            margin-top: 4vh;
+            width: 80vw; max-width: 360px;
+            background: white;
+            padding: 15px 15px 60px 15px; /* Bottom space for "handwritten" date */
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            cursor: pointer;
+            border-radius: 2px;
+            z-index: 10;
+            transform: rotate(0deg);
+        }
+
+        #photo-frame::after {
+            content: "May 13, 2024 ♡";
+            position: absolute; bottom: 15px; left: 0; width: 100%;
+            text-align: center;
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.5rem;
+            color: #bfa5a5;
+        }
+
+        #main-photo {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+        }
+
+        #message-area {
+            margin-top: 5vh;
+            width: 85%;
+            text-align: center;
+            min-height: 120px;
+            z-index: 30;
+        }
+
+        #message-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.7rem;
+            font-style: italic;
+            color: var(--text);
+            opacity: 0;
+            line-height: 1.3;
+        }
+
+        footer {
+            position: absolute; bottom: 30px;
+            letter-spacing: 5px; font-size: 0.6rem;
+            color: #bfa5a5; text-transform: uppercase;
+            z-index: 30;
+        }
+
+        /* Flower Style */
+        .flower {
+            position: absolute;
+            pointer-events: none;
+            z-index: 100;
+            font-size: 30px;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.05));
+        }
+
+        /* Custom Cursor Glow */
+        #cursor-glow {
+            position: fixed;
+            width: 20px; height: 20px;
+            background: rgba(214, 51, 132, 0.2);
+            filter: blur(10px);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+<div id="cursor-glow"></div>
+
+<audio id="bg-music" loop>
+    <source src="audio/music.mp3" type="audio/mpeg">
+</audio>
+
+<header>
+    <span class="song-title">Main Tera...</span>
+    <div class="counter-text">
+        <span id="count-num">50</span> / 50 Petals of Gratitude
+    </div>
+</header>
+
+<div id="photo-frame">
+    <img id="main-photo" src="images/picture.jpg" alt="Steve and You">
+</div>
+
+<div id="message-area">
+    <div id="message-text">Every petal is a memory...</div>
+</div>
+
+<footer>Tap the memory to begin</footer>
+
+<script>
+    const messages = [
+        "In Prague, you went in search of painkillers for me when my knee was hurting.",
+        "You have never once made a joke that made me feel physically insecure.",
+        "You research remedies on YouTube for me whenever I am feeling physically sick.",
+        "You always cook the recipes I like; I only have to tell you once, and it’s on my plate.",
+        "You always apologize without letting your ego get in the way.",
+        "You prioritize me and make it obvious that you are doing so. It gives me butterflies.",
+        "You always protect me; I would never have powered through everything in Dublin without you.",
+        "You get genuinely angry at the people who hurt me.",
+        "You are my number one cheerleader.",
+        "You motivate me like no one else can.",
+        "You always support my dreams, even when they’re as silly as starting a random business.",
+        "You are my go to person; whenever something goes wrong, my mind automatically thinks of you.",
+        "You are always available for me.",
+        "Your willingness to spend time,staying up late or waking up early,just to be with me.",
+        "I am so grateful for that morning car ride you took me on to Kilkenny.",
+        "You always ask if I’m hungry when we go out. It’s so simple but so thoughtful.",
+        "Whenever I am traveling, you always make sure I have reached safely.",
+        "You make me laugh and always act like I’m funny, even though I have to torture you to say it!",
+        "I’m grateful for the giggles and teases when we’re together. You make me feel like a little girl.",
+        "You are my number one confidant; I can always trust you with my secrets.",
+        "You give such good advice, but you always listen to me first.",
+        "I’m grateful that you have never doubted me; you have always trusted me completely.",
+        "You celebrate even my smallest wins.",
+        "You respect my boundaries in everything, Steve. You’ve never pushed me once if I said no.",
+        "You are so consistent with your love.",
+        "You care for me so much,sometimes just too much!",
+        "You always consider my opinion and ask me before making a decision.",
+        "You are so hardworking, and I’m grateful for how hard you work for us and our relationship.",
+        "I’m grateful that you are transparent and comfortable being vulnerable with me.",
+        "You stand up for me during all of my toughest times.",
+        "I am so grateful for every time you held me when I was breaking down.",
+        "You think of me every time you see a plush toy; I still feel happy looking at the lamb.",
+        "I am very grateful for all those silly dances we did on empty roads.",
+        "I’ll never forget our runs for the bus and our random races in Phoenix Park (that I always lose).",
+        "I’m grateful for all the times we sang together; it’s my absolute favorite part about us.",
+        "I’m so grateful for the random videos you send me, like the one from when I was in Kannur.",
+        "You never go to sleep if you know I'm upset; you never leave me 'on seen' during tough times.",
+        "Steve, I am so grateful for the websites you’ve created for me. They make me feel so special.",
+        "I’m grateful for all the times you think about me, even when you are incredibly busy.",
+        "I'm thankful for all the car rides we’ve shared and the conversations we had along the way.",
+        "I’m thankful for how you always open the door for me; your chivalry never goes unnoticed.",
+        "I'm so thankful for the thought, effort, and resources you put into buying me such meaningful gifts.",
+        "I'm grateful for how you always make sure I have my favorite snacks when I'm stressed.",
+        "I love how you never judge my moods and just stay by my side until I feel better.",
+        "I'm thankful for your warm hugs that make all my worries disappear instantly.",
+        "I appreciate how you remember the tiny details about my day that I didn't even think you heard.",
+        "I’m grateful for the way you include me in all your future plans and dreams.",
+        "I'm thankful for your infinite patience with me, even when I'm being difficult.",
+        "I'm grateful for the sense of safety I feel just being in the same room as you.",
+        "Thank you for challenging me to be a better person while loving me exactly as I am."
+    ];
+
+    let petalCount = 50;
+    let musicStarted = false;
+    const frame = document.getElementById('photo-frame');
+    const countDisplay = document.getElementById('count-num');
+    const msgDisplay = document.getElementById('message-text');
+    const music = document.getElementById('bg-music');
+    const cursor = document.getElementById('cursor-glow');
+    const flowerTypes = ["🌻", "🌹", "🌷", "🌸", "🌼", "🌺", "😘","🥰","❤️", "🏵️"];
+
+    // Mouse Follower
+    window.addEventListener('mousemove', (e) => {
+        gsap.to(cursor, { x: e.clientX - 10, y: e.clientY - 10, duration: 0.2 });
+    });
+
+    // Ambient Floating Petals (Drifting every 3 seconds)
+    setInterval(() => {
+        const x = Math.random() * window.innerWidth;
+        createPetal(x, -50, true);
+    }, 3000);
+
+    frame.addEventListener('click', (e) => {
+        if (!musicStarted) {
+            music.play();
+            musicStarted = true;
+        }
+
+        if (petalCount > 0) {
+            for(let i = 0; i < 6; i++) {
+                createPetal(e.clientX, e.clientY, false);
+            }
+            
+            updateMessage(messages[50 - petalCount]);
+            petalCount--;
+            countDisplay.innerText = petalCount;
+
+            gsap.fromTo(frame, {scale: 1, rotate: 0}, {scale: 0.95, rotate: 0, duration: 0.1, yoyo: true, repeat: 1});
+        } else {
+            updateMessage("Main Tera... and you are mine. Forever.");
+        }
+    });
+
+    function createPetal(x, y, isAmbient) {
+        const f = document.createElement('div');
+        f.className = 'flower';
+        f.innerHTML = flowerTypes[Math.floor(Math.random() * flowerTypes.length)];
+        f.style.left = x + 'px';
+        f.style.top = y + 'px';
+        document.body.appendChild(f);
+
+        if (isAmbient) {
+            // Slow drift for ambient petals
+            gsap.to(f, {
+                y: window.innerHeight + 100,
+                x: `+=${(Math.random() - 0.5) * 200}`,
+                rotation: 360,
+                duration: 10 + Math.random() * 5,
+                ease: "none",
+                onComplete: () => f.remove()
+            });
+        } else {
+            // Explosion for clicks
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = 150 + Math.random() * 200;
+            gsap.to(f, {
+                x: Math.cos(angle) * velocity,
+                y: Math.sin(angle) * velocity,
+                rotation: Math.random() * 720,
+                duration: 0.8,
+                ease: "power2.out",
+                onComplete: () => {
+                    gsap.to(f, {
+                        y: window.innerHeight + 100,
+                        x: `+=${(Math.random() - 0.5) * 300}`,
+                        duration: 3 + Math.random() * 2,
+                        ease: "power1.in",
+                        onComplete: () => f.remove()
+                    });
+                }
+            });
+        }
+    }
+
+    function updateMessage(txt) {
+        gsap.to(msgDisplay, { opacity: 0, y: 10, duration: 0.2, onComplete: () => {
+            msgDisplay.innerText = txt;
+            gsap.to(msgDisplay, { opacity: 1, y: 0, duration: 0.6 });
+        }});
+    }
+</script>
+
+</body>
+</html>
